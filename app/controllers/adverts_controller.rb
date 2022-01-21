@@ -4,13 +4,12 @@ class AdvertsController < ApplicationController
   # GET /adverts
   def index
     @adverts = Advert.all
-
-    render json: @adverts
+    render json: @adverts, each_serializer: AdvertSerializer
   end
 
   # GET /adverts/1
   def show
-    render json: @advert
+    render json: @advert, serializer: AdvertSerializer
   end
 
   # POST /adverts

@@ -1,4 +1,4 @@
 class Comment < ApplicationRecord
-  belongs_to = belongs_to :users, though: :users
-  belongs_to :adverts
+  belongs_to :advert
+  belongs_to :user
 end

@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
-  resources :adverts
-  resources :comments
-  resources :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :users do
+    resources :adverts do
+      resources :comments
+    end
+  end
 
-  # Defines the root path route ("/")
-  # root "articles#index"
 end
