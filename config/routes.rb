@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  resources :users do
-    resources :adverts do
-      resources :comments
-    end
-  end
-
+  
+  devise_for :users,
+             controllers: { sessions: 'users/sessions', registrations: 'users/registrations'}
+  
+  resources :adverts
+  resources :comments
 end

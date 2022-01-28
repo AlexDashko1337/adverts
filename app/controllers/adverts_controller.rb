@@ -1,10 +1,16 @@
 class AdvertsController < ApplicationController
   before_action :set_advert, only: %i[ show update destroy ]
+  before_action :authenticate_user!, only: %i[ create destroy update]
 
   # GET /adverts
-  def index
-    @adverts = Advert.all
-    render json: @adverts, each_serializer: AdvertSerializer
+  def index #/users/[:user_id]/adverts #/adverts
+    if params[:user_id].present? 
+      @adverts = Advert.find_by(user_id: params[:user_id])
+      render json: @adverts, each_serializer: AdvertSerializer
+    else
+      @adverts = Advert.all
+      render json: @adverts, each_serializer: AdvertSerializer
+    end
   end
 
   # GET /adverts/1
@@ -14,7 +20,8 @@ class AdvertsController < ApplicationController
 
   # POST /adverts
   def create
-    @advert = Advert.new(advert_params)
+    @advert = current_user.adverts.new(advert_params)
+    #@advert = Advert.new(advert_params)
 
     if @advert.save
       render json: @advert, status: :created, location: @advert
@@ -45,6 +52,6 @@ class AdvertsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def advert_params
-      params.require(:advert).permit(:user_id, :context)
+      params.permit(:context)
     end
 end
