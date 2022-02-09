@@ -1,10 +1,14 @@
 class CommentsController < ApplicationController
+  before_action :authenticate_user!, except: %i[ index show ]
   before_action :set_comment, only: %i[ show update destroy ]
+  before_action :owner, only: %i[ update destroy ]
 
   # GET /comments
   def index
-    @comments = Comment.all
-    render json: @comments, each_serializer: CommentSerializer
+    if params[:advert_id].present?
+      @comments = Comment.find_by(advert_id: params[:advert_id])
+      render json: @comments, each_serializer: CommentSerializer
+    end
   end
 
   # GET /comments/1
@@ -14,10 +18,10 @@ class CommentsController < ApplicationController
 
   # POST /comments
   def create
-    @comment = Comment.new(comment_params)
-
+  @comment = current_user.comments.new(comment_params)
+  @comment.user_id = current_user.id
     if @comment.save
-      render json: @comment, status: :created, location: @comment
+      render json: @comment, status: :created
     else
       render json: @comment.errors, status: :unprocessable_entity
     end
@@ -34,6 +38,17 @@ class CommentsController < ApplicationController
 
   # DELETE /comments/1
   def destroy
+    @user = User.find(@comment.user_id)
+    if current_user.id != @user.id && current_user.admin?
+      @user.penalty = @user.penalty+1
+      @user.save
+      render json: {message: @user.penalty}
+      if @user.penalty >= MAXPENALTYS
+        @user.banned_to = BANTIME
+        @user.penalty = 0
+        @user.save
+      end
+    end
     @comment.destroy
   end
 
@@ -45,6 +60,6 @@ class CommentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def comment_params
-      params.require(:comment).permit(:user_id, :advert_id, :context)
+      params.permit(:context, :advert_id)
     end
 end
