@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: %i[ create ]
   before_action :set_user, only: %i[ show update destroy set_role ]
-  before_action :isadmin, only: %i[ give_role ]
+  before_action :is_admin, only: %i[ give_role ]
   before_action :admin_or_owner, only: %i[ update destroy ]
 
   def admin_or_owner
