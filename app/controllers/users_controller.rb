@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: %i[ create ]
-  before_action :set_user, only: %i[ show update destroy create_admin ]
-  before_action :isadmin, only: %i[ create_admin ]
+  before_action :set_user, only: %i[ show update destroy set_role ]
+  before_action :isadmin, only: %i[ give_role ]
   before_action :admin_or_owner, only: %i[ update destroy ]
 
   def admin_or_owner
@@ -10,9 +10,15 @@ class UsersController < ApplicationController
     end
   end
 
-  # PATCH /users/set_admin
-  def create_admin
-    @user.role = :moderator
+  #def get_token
+  #  unless current_user.nil?
+  #    render json: request.env['warden-jwt_auth.token'], status: :ok
+  #  end
+  #end
+
+  # PATCH /users/set_role/:id/:role
+  def set_role
+    @user.role = params[:role]
     if @user.save
       render json: @user.role, status: :accepted
     else

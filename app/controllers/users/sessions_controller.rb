@@ -5,9 +5,11 @@ class Users::SessionsController < Devise::SessionsController
 
   def respond_with(_resource, _opts = {})
     unless current_user.nil?
+      #render json: request.env['warden-jwt_auth.token'], status: :ok
       render json: {
         message: 'You are logged in.',
-        user: current_user
+        user: current_user,
+        token: request.env['warden-jwt_auth.token']
       }, status: :ok
     else
       render json: {

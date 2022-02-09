@@ -2,10 +2,10 @@ class ApplicationController < ActionController::API
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :user_banned, if: :authenticate_user!
 
-  $bantime = 1.year.from_now
-  $maxpenaltys = 3
+  BANTIME = 1.year.from_now
+  MAXPENALTYS = 3
 
-  def isadmin
+  def is_admin
     render json: { message: 'You have no rights to do this'}, status: :forbidden unless current_user.admin?
   end
 

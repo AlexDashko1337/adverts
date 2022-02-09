@@ -3,13 +3,14 @@ Rails.application.routes.draw do
   devise_for :users,
              controllers: { sessions: 'users/sessions', registrations: 'users/registrations'}
   
-  patch '/users/set_admin/:id', to: 'users#create_admin' 
+  patch '/users/set_role/:id/:role', to: 'users#set_role' 
+  #get '/users/get_token', to: 'users#get_token'
 
-  get '/adverts/unposted', to: 'adverts#unposted'
-  patch '/adverts/unposted/:id', to: 'adverts#approve'
-  
-  get '/adverts/:advert_id/comments', to: 'comments#index'
-  get '/adverts/:advert_id/comments/:id', to: 'comments#show'
+  resources :users, :comments
+  resources :adverts do
+    get :unposted, on: :collection
+    post :unposted, on: :member
+    resources :comments, only: [:index, :show]
+  end
 
-  resources :users, :adverts, :comments
 end

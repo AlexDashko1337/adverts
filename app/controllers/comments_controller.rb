@@ -43,8 +43,8 @@ class CommentsController < ApplicationController
       @user.penalty = @user.penalty+1
       @user.save
       render json: {message: @user.penalty}
-      if @user.penalty >= 3
-        @user.banned_to = 1.year.from_now
+      if @user.penalty >= MAXPENALTYS
+        @user.banned_to = BANTIME
         @user.penalty = 0
         @user.save
       end

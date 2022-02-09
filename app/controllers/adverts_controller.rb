@@ -67,8 +67,8 @@ class AdvertsController < ApplicationController
     if current_user.id != @user.id && current_user.admin?
       @user.penalty = @user.penalty+1
       @user.save
-      if @user.penalty >= $maxpenaltys
-        @user.banned_to = $bantime
+      if @user.penalty >= MAXPENALTYS
+        @user.banned_to = BANTIME
         render json: { message: 'User was banned', user: @user, bantime: @user.banned_to }, status: :ok
         @user.penalty = 0
         @user.save
