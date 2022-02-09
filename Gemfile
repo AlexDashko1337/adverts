@@ -11,6 +11,7 @@ gem 'active_model_serializers', '~> 0.10.13'
 gem 'devise-jwt', '~> 0.9.0'
 gem 'rack-cors', '~> 1.1', '>= 1.1.1'
 gem 'rest-client', '~> 2.1'
+gem 'rails-i18n', '~> 7.0', '>= 7.0.1'
 
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
